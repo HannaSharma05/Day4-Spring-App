@@ -1,0 +1,168 @@
+A simple Java application demonstrating Spring Framework Dependency Injection (DI) using XML-based configuration.
+
+This project demonstrates:
+Creating a Java application using Spring Tool Suite (STS)
+Configuring Spring using applicationContext.xml
+Creating and managing Spring Beans
+Injecting object properties using XML configuration
+Retrieving beans from the Spring IoC Container
+
+# 🌱 Spring Framework XML Configuration Demo
+
+> A beginner-friendly Java project demonstrating Dependency Injection (DI) using Spring Framework XML Configuration.
+
+---
+
+## 📌 Features
+
+- ✅ XML-Based Bean Configuration
+- ✅ Dependency Injection
+- ✅ Employee Bean Creation
+- ✅ ApplicationContext Example
+
+---
+
+# 📂 Project Structure
+
+```
+SpringXMLDemo
+│
+├── src
+│   ├── com/example/demo
+│   │      ├── Demo.java
+│   │      └── Employee.java
+│   │
+│   └── applicationContext.xml
+│
+└── Libraries
+```
+
+---
+
+# 📚 Required JAR Files
+
+```
+commons-logging.jar
+spring-beans-4.0.6.RELEASE.jar
+spring-context-4.0.6.RELEASE.jar
+spring-core-4.0.6.RELEASE.jar
+spring-expression-4.0.6.RELEASE.jar
+```
+
+---
+
+### Step 1
+
+Right-click the project.
+
+### Step 2
+
+Open
+
+```
+Properties
+```
+
+### Step 3
+
+Navigate to
+
+```
+Java Build Path
+→ Libraries
+→ Add External JARs
+```
+
+### Step 4
+
+Select all Spring JAR files.
+
+### Step 5
+
+Click
+
+```
+Apply
+Apply and Close
+```
+
+---
+
+# 📄 Demo.java
+
+```java
+ApplicationContext ac =
+        new ClassPathXmlApplicationContext("applicationContext.xml");
+
+Employee e = (Employee) ac.getBean("emp");
+```
+
+---
+
+# 📄 Employee.java
+
+Contains the POJO class with:
+
+- Employee ID
+- Name
+- Salary
+
+along with getters and setters.
+--> package com.example.demo;
+
+import org.springframework.context.ApplicationContext;
+
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+public class Demo {
+	public static void main(String[] args) {
+		ApplicationContext ac = new ClassPathXmlApplicationContext("applicationContext.xml");
+		Employee e = (Employee) ac.getBean("emp");
+		
+		System.out.println("Employee id is" + e.getEmpid());
+		System.out.println("Employee name is" + e.getName());
+		System.out.println("Employee salary is" + e.getSalary());
+	}
+}
+
+---
+
+# 📄 applicationContext.xml
+
+Defines the Spring Bean.
+
+```xml
+<bean id="emp" class="com.example.demo.Employee">
+
+    <property name="empid" value="101"/>
+
+    <property name="name" value="Ravi"/>
+
+    <property name="salary" value="1000.00"/>
+
+</bean>
+```
+
+---
+
+# ▶️ Output
+
+```
+Employee ID : 101
+Employee Name : Ravi
+Employee Salary : 1000.0
+```
+
+---
+
+# 📖 Concepts Learned
+
+| Concept | Description |
+|----------|-------------|
+| IoC | Inversion of Control |
+| DI | Dependency Injection |
+| Bean | Spring-managed object |
+| XML Config | Defines beans and dependencies |
+| ApplicationContext | Loads Spring configuration |
+
+---
