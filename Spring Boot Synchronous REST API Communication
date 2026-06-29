@@ -1,0 +1,380 @@
+# 🔄 Spring Boot Synchronous REST API Communication
+
+A simple demonstration of **Synchronous Communication** between two Spring Boot microservices using **RestTemplate**.
+
+---
+
+# 📌 Project Overview
+
+This project consists of **two Spring Boot applications**:
+
+1. **ProductService**
+   - Provides product information.
+   - Runs on **Port 8081**.
+
+2. **ProductClient**
+   - Calls the ProductService using **RestTemplate**.
+   - Runs on **Port 8080**.
+
+---
+
+# 🏗 Architecture
+
+```text
+                    HTTP GET Request
+
+        localhost:8080/getProduct
+                  │
+                  ▼
+          ProductClient (8080)
+                  │
+      RestTemplate.getForObject()
+                  │
+                  ▼
+     http://localhost:8081/product
+                  │
+                  ▼
+         ProductService (8081)
+                  │
+                  ▼
+     "Laptop Price = Rupees 65000"
+                  │
+                  ▼
+          Returned to Client
+```
+
+---
+
+# 📂 Project Structure
+
+## ProductService
+
+```text
+ProductService
+│
+├── src/main/java
+│   └── com/example/demo
+│       ├── ProductServiceApplication.java
+│       └── ProductController.java
+│
+└── application.properties
+```
+
+---
+
+## ProductClient
+
+```text
+ProductClient
+│
+├── src/main/java
+│   └── com/example/demo
+│       ├── ProductClientApplication.java
+│       └── ProductClientController.java
+│
+└── application.properties
+```
+
+---
+
+# 🚀 ProductService
+
+## ProductServiceApplication.java
+
+```java
+package com.example.demo;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class ProductServiceApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(ProductServiceApplication.class, args);
+    }
+
+}
+```
+
+---
+
+## ProductController.java
+
+```java
+package com.example.demo;
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+public class ProductController {
+
+    @GetMapping("/product")
+    public String getProduct() {
+
+        return "Laptop Price = Rupees 65000";
+
+    }
+
+}
+```
+
+---
+
+## application.properties
+
+```properties
+spring.application.name=ProductService
+server.port=8081
+```
+
+---
+
+# ▶️ Test ProductService
+
+Start the ProductService application.
+
+Open the browser:
+
+```
+http://localhost:8081/product
+```
+
+### Output
+
+```
+Laptop Price = Rupees 65000
+```
+
+---
+
+# 🚀 ProductClient
+
+## ProductClientApplication.java
+
+```java
+package com.example.demo;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+import org.springframework.web.client.RestTemplate;
+
+@SpringBootApplication
+public class ProductClientApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(ProductClientApplication.class, args);
+    }
+
+    @Bean
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
+    }
+
+}
+```
+
+---
+
+## ProductClientController.java
+
+```java
+package com.example.demo;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
+
+@RestController
+public class ProductClientController {
+
+    @Autowired
+    private RestTemplate restTemplate;
+
+    @GetMapping("/getProduct")
+    public String getProduct() {
+
+        String response = restTemplate.getForObject(
+                "http://localhost:8081/product",
+                String.class);
+
+        return response;
+    }
+
+}
+```
+
+> **Note:** The `@GetMapping("/getProduct")` annotation is required on the `getProduct()` method so that it can be accessed from the browser.
+
+---
+
+## application.properties
+
+```properties
+spring.application.name=ProductClient
+server.port=8080
+```
+
+---
+
+# ▶️ Running the Project
+
+### Step 1
+
+Start **ProductService**.
+
+Runs on
+
+```
+http://localhost:8081
+```
+
+---
+
+### Step 2
+
+Verify ProductService.
+
+```
+http://localhost:8081/product
+```
+
+Output
+
+```
+Laptop Price = Rupees 65000
+```
+
+---
+
+### Step 3
+
+Start **ProductClient**.
+
+Runs on
+
+```
+http://localhost:8080
+```
+
+---
+
+### Step 4
+
+Open
+
+```
+http://localhost:8080/getProduct
+```
+
+Output
+
+```
+Laptop Price = Rupees 65000
+```
+
+---
+
+# 🔍 How Synchronous Communication Works
+
+1. User sends a request to **ProductClient**.
+2. ProductClient waits for the response.
+3. `RestTemplate` sends an HTTP GET request to ProductService.
+4. ProductService processes the request.
+5. ProductService returns the response.
+6. ProductClient receives the response.
+7. ProductClient sends the same response back to the user.
+
+---
+
+# 🔁 Request Flow
+
+```text
+Browser
+   │
+   ▼
+ProductClient
+   │
+   ▼
+RestTemplate
+   │
+HTTP GET
+   │
+   ▼
+ProductService
+   │
+Returns Product Details
+   │
+   ▼
+ProductClient
+   │
+   ▼
+Browser
+```
+
+---
+
+# 📚 Key Concepts
+
+| Concept | Description |
+|---------|-------------|
+| Spring Boot | Framework for creating stand-alone Java applications |
+| REST API | Communication between applications using HTTP |
+| RestTemplate | Spring class used to consume REST APIs |
+| @RestController | Marks the class as a REST Controller |
+| @GetMapping | Maps HTTP GET requests to methods |
+| @Autowired | Automatically injects dependencies |
+| @Bean | Registers RestTemplate as a Spring Bean |
+| Synchronous Call | Client waits until the server responds |
+
+---
+
+# ⚡ Synchronous Call Characteristics
+
+- Client waits for the server response.
+- Blocking communication.
+- Simple to implement.
+- Suitable for small applications.
+- Higher response time if the server is slow.
+
+---
+
+# 📖 Expected Output
+
+```
+Browser
+      │
+      ▼
+http://localhost:8080/getProduct
+
+↓
+
+Laptop Price = Rupees 65000
+```
+
+---
+
+# 🎯 Technologies Used
+
+- Java
+- Spring Boot
+- Spring Web
+- REST API
+- RestTemplate
+- Maven
+- Spring Tool Suite (STS)
+
+---
+
+# 📌 Learning Outcomes
+
+After completing this project, you will understand:
+
+- Creating REST APIs using Spring Boot.
+- Consuming REST APIs using `RestTemplate`.
+- Configuring multiple Spring Boot applications.
+- Synchronous communication between microservices.
+- HTTP request-response lifecycle.
